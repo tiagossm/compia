@@ -104,17 +104,17 @@ export default function Layout({ children }: LayoutProps) {
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
         {/* Sidebar Header - Logo otimizada */}
-        <div className="flex items-center justify-center px-4 py-5 border-b border-slate-10" style={{ backgroundColor: '#00000' }}>
+        <div className="flex items-center justify-center px-4 py-5 border-b border-slate-100" style={{ backgroundColor: '#ffffff' }}>
           <div className="flex items-center justify-center w-full">
             <img 
               src="https://mocha-cdn.com/01984e68-f701-7339-b2ea-61f4c5037843/compia_logo_SEMFUNDO.webp" 
               alt="COMPIA" 
-              className="h-52 w-auto max-w-[240px] object-contain" 
+              className="h-16 w-auto max-w-[200px] object-contain" 
             />
           </div>
           <button
             onClick={() => setSidebarOpen(false)}
-            className="lg:hidden absolute top-3 right-3 p-1.5 text-white/80 hover:text-white transition-colors bg-black/20 rounded-md"
+            className="lg:hidden absolute top-3 right-3 p-1.5 text-slate-600 hover:text-slate-900 transition-colors bg-slate-100 rounded-md"
           >
             <X className="w-5 h-5" />
           </button>
@@ -141,11 +141,10 @@ export default function Layout({ children }: LayoutProps) {
                         className={`
                           flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200
                           ${isActive 
-                            ? 'text-white shadow-sm border border-blue-300' 
+                            ? 'bg-blue-600 text-white shadow-sm' 
                             : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                           }
                         `}
-                        style={isActive ? { backgroundColor: '#4882F6' } : {}}
                       >
                         <item.icon className={`w-5 h-5 mr-3 ${isActive ? 'text-white' : 'text-slate-400'}`} />
                         {item.name}
@@ -208,11 +207,10 @@ export default function Layout({ children }: LayoutProps) {
                           className={`
                             flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200
                             ${isActive 
-                              ? 'text-white shadow-sm border border-emerald-300' 
+                              ? 'bg-green-600 text-white shadow-sm' 
                               : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                             }
                           `}
-                          style={isActive ? { backgroundColor: '#108981' } : {}}
                         >
                           <item.icon className={`w-5 h-5 mr-3 ${isActive ? 'text-white' : 'text-slate-400'}`} />
                           {item.name}
@@ -235,11 +233,10 @@ export default function Layout({ children }: LayoutProps) {
                           className={`
                             flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200
                             ${isActive 
-                              ? 'text-white shadow-sm border border-purple-300' 
+                              ? 'bg-purple-600 text-white shadow-sm' 
                               : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                             }
                           `}
-                          style={isActive ? { backgroundColor: '#895CF5' } : {}}
                         >
                           <item.icon className={`w-5 h-5 mr-3 ${isActive ? 'text-white' : 'text-slate-400'}`} />
                           {item.name}

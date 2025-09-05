@@ -35,10 +35,14 @@ export default function ChecklistForm({
   const debouncedResponses = useDebounce(responses, 2000); // 2 segundos de delay
   const debouncedComments = useDebounce(comments, 2000);
 
-  // Auto-save effect
+  // Auto-save effect with better error handling
   useEffect(() => {
     if (onAutoSave && !readonly && Object.keys(debouncedResponses).length > 0) {
-      onAutoSave(debouncedResponses, debouncedComments);
+      try {
+        onAutoSave(debouncedResponses, debouncedComments);
+      } catch (error) {
+        console.error('Auto-save failed:', error);
+      }
     }
   }, [debouncedResponses, debouncedComments, onAutoSave, readonly]);
 

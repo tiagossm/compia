@@ -119,7 +119,7 @@ export default function Dashboard() {
 
   return (
     <Layout>
-      <div className="space-y-4">
+      <div className="space-y-6">
         {/* User Assignment Alert - for users without organization */}
         {extendedUser?.profile && !extendedUser.profile.organization_id && (
           <UnassignedUserBanner 
@@ -128,39 +128,38 @@ export default function Dashboard() {
           />
         )}
 
-        {/* Compact Header */}
-        <div className="bg-gradient-to-r from-compia-blue to-compia-purple rounded-xl p-5 text-white">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-6 text-white">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-2">
-                <h1 className="text-2xl font-bold">
+                <h1 className="text-3xl font-bold">
                   Olá, {extendedUser?.profile?.name || user?.email?.split('@')[0]}! 👋
                 </h1>
-                <span className="text-xs bg-white/20 px-2 py-1 rounded-full">
+                <span className="text-sm bg-white/20 px-3 py-1 rounded-full">
                   {new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'short' })}
                 </span>
               </div>
               {stats && (
-                <div className="flex flex-wrap items-center gap-4 text-sm text-blue-100">
-                  <span className="flex items-center gap-1">
-                    <TrendingUp className="w-4 h-4" />
+                <div className="flex flex-wrap items-center gap-6 text-blue-100">
+                  <span className="flex items-center gap-2">
+                    <TrendingUp className="w-5 h-5" />
                     {getCompletionRate()}% conclusão
                   </span>
-                  <span className="flex items-center gap-1">
-                    <Activity className="w-4 h-4" />
+                  <span className="flex items-center gap-2">
+                    <Activity className="w-5 h-5" />
                     {getPerformanceInsight().text}
                   </span>
                 </div>
               )}
             </div>
             
-            {extendedUser?.profile?.role === 'system_admin' && (
-              <div className="w-full sm:w-56">
+            {(extendedUser?.profile?.role === 'system_admin' || extendedUser?.profile?.role === 'admin') && (
+              <div className="w-full sm:w-64">
                 <OrganizationSelector
                   selectedOrgId={selectedOrgId}
                   onOrganizationChange={setSelectedOrgId}
                   showAllOption={true}
-                  className="bg-white/20 border-white/30 text-white placeholder-purple-200"
                 />
               </div>
             )}
@@ -168,7 +167,7 @@ export default function Dashboard() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <StatsCard
             title="Total de Inspeções"
             value={stats?.total || 0}
@@ -247,23 +246,23 @@ export default function Dashboard() {
         )}
 
         {/* Quick Actions */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
-          <div className="flex items-center gap-3 mb-5">
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+          <div className="flex items-center gap-3 mb-6">
             <div className="p-2 bg-blue-100 rounded-lg">
               <Zap className="w-5 h-5 text-blue-600" />
             </div>
-            <h2 className="text-lg font-semibold text-slate-900">
+            <h2 className="text-xl font-semibold text-slate-900">
               Ações Rápidas
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <a
               href="/inspections/new"
               className="flex items-center gap-4 p-4 border border-slate-200 rounded-lg hover:bg-blue-50 hover:border-blue-300 transition-all duration-200 group"
             >
-              <div className="p-3 bg-compia-blue/10 rounded-lg group-hover:bg-compia-blue/20 transition-colors">
-                <PlusCircle className="w-6 h-6 text-compia-blue" />
+              <div className="p-3 bg-blue-100 rounded-lg group-hover:bg-blue-200 transition-colors">
+                <PlusCircle className="w-6 h-6 text-blue-600" />
               </div>
               <div>
                 <h3 className="font-medium text-slate-900">Nova Inspeção</h3>
@@ -277,8 +276,8 @@ export default function Dashboard() {
               href="/checklists"
               className="flex items-center gap-4 p-4 border border-slate-200 rounded-lg hover:bg-purple-50 hover:border-purple-300 transition-all duration-200 group"
             >
-              <div className="p-3 bg-compia-purple/10 rounded-lg group-hover:bg-compia-purple/20 transition-colors">
-                <FileCheck className="w-6 h-6 text-compia-purple" />
+              <div className="p-3 bg-purple-100 rounded-lg group-hover:bg-purple-200 transition-colors">
+                <FileCheck className="w-6 h-6 text-purple-600" />
               </div>
               <div>
                 <h3 className="font-medium text-slate-900">Checklists</h3>
@@ -292,8 +291,8 @@ export default function Dashboard() {
               href="/reports"
               className="flex items-center gap-4 p-4 border border-slate-200 rounded-lg hover:bg-green-50 hover:border-green-300 transition-all duration-200 group"
             >
-              <div className="p-3 bg-compia-green/10 rounded-lg group-hover:bg-compia-green/20 transition-colors">
-                <BarChart3 className="w-6 h-6 text-compia-green" />
+              <div className="p-3 bg-green-100 rounded-lg group-hover:bg-green-200 transition-colors">
+                <BarChart3 className="w-6 h-6 text-green-600" />
               </div>
               <div>
                 <h3 className="font-medium text-slate-900">Relatórios</h3>
@@ -314,7 +313,7 @@ export default function Dashboard() {
                   <Target className="w-5 h-5 text-orange-600" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-semibold text-slate-900">
+                  <h2 className="text-xl font-semibold text-slate-900">
                     Planos de Ação
                   </h2>
                   <p className="text-sm text-slate-600">
@@ -389,7 +388,7 @@ export default function Dashboard() {
               <div className="p-2 bg-red-100 rounded-lg">
                 <Shield className="w-5 h-5 text-red-600" />
               </div>
-              <h2 className="text-lg font-semibold text-slate-900">
+              <h2 className="text-xl font-semibold text-slate-900">
                 Painel Administrativo
               </h2>
             </div>
@@ -434,7 +433,7 @@ export default function Dashboard() {
             <div className="p-4 bg-slate-100 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
               <ClipboardList className="w-8 h-8 text-slate-400" />
             </div>
-            <h3 className="text-lg font-semibold text-slate-900 mb-2">
+            <h3 className="text-xl font-semibold text-slate-900 mb-2">
               Pronto para começar?
             </h3>
             <p className="text-slate-600 mb-6 max-w-md mx-auto">
