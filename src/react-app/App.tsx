@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router";
 import { AuthProvider } from '@getmocha/users-service/react';
+import { SupabaseAuthProvider } from '@/react-app/components/SupabaseAuthProvider';
 import { ToastProvider } from "@/react-app/hooks/useToast";
 import HomePage from "@/react-app/pages/Home";
 import Inspections from "@/react-app/pages/Inspections";
@@ -26,45 +27,49 @@ import OrganizationProfile from "@/react-app/pages/OrganizationProfile";
 import SharedInspection from "@/react-app/pages/SharedInspection";
 import AcceptInvitation from "@/react-app/pages/AcceptInvitation";
 import RolePermissions from "@/react-app/pages/RolePermissions";
+import SupabaseLogin from "@/react-app/pages/SupabaseLogin";
+import AuthCallback from "@/react-app/pages/AuthCallback";
 
 export default function App() {
   return (
-    <AuthProvider>
-      <ToastProvider>
-        <Router>
-        <Routes>
-        {/* Public routes */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/auth/callback" element={<AuthCallback />} />
-        <Route path="/shared/:token" element={<SharedInspection />} />
-        <Route path="/accept-invitation/:token" element={<AcceptInvitation />} />
-        
-        {/* Protected routes */}
-        <Route path="/" element={<AuthGuard><HomePage /></AuthGuard>} />
-        <Route path="/inspections" element={<AuthGuard><Inspections /></AuthGuard>} />
-        <Route path="/inspections/new" element={<AuthGuard><NewInspection /></AuthGuard>} />
-        <Route path="/inspections/:id/edit" element={<AuthGuard><EditInspection /></AuthGuard>} />
-        <Route path="/inspections/:id" element={<AuthGuard><InspectionDetail /></AuthGuard>} />
-        <Route path="/reports" element={<AuthGuard><Reports /></AuthGuard>} />
-        <Route path="/settings" element={<AuthGuard><Settings /></AuthGuard>} />
-        <Route path="/settings/permissions" element={<AuthGuard requiredRole="system_admin"><RolePermissions /></AuthGuard>} />
-        <Route path="/checklists" element={<AuthGuard><ChecklistTemplates /></AuthGuard>} />
-        <Route path="/checklists/new" element={<AuthGuard><NewChecklistTemplate /></AuthGuard>} />
-        <Route path="/checklists/ai-generate" element={<AuthGuard><AIChecklistGenerator /></AuthGuard>} />
-        <Route path="/checklists/import" element={<AuthGuard><CSVImport /></AuthGuard>} />
-        <Route path="/checklists/:id" element={<AuthGuard><ChecklistDetail /></AuthGuard>} />
-        <Route path="/checklists/:id/edit" element={<AuthGuard><ChecklistTemplateEdit /></AuthGuard>} />
-        <Route path="/inspections/:id/action-plan" element={<AuthGuard><ActionPlan /></AuthGuard>} />
-        <Route path="/action-plans" element={<AuthGuard><ActionPlans /></AuthGuard>} />
-        
-        {/* Admin routes */}
-        <Route path="/users" element={<AuthGuard requiredRoles={["system_admin", "admin"]}><Users /></AuthGuard>} />
-        <Route path="/organizations" element={<AuthGuard requiredRoles={["system_admin", "admin", "org_admin", "manager"]}><Organizations /></AuthGuard>} />
-        <Route path="/organizations/:id" element={<AuthGuard requiredRoles={["system_admin", "admin", "org_admin", "manager"]}><OrganizationProfile /></AuthGuard>} />
-        <Route path="/profile" element={<AuthGuard><UserProfile /></AuthGuard>} />
-      </Routes>
-        </Router>
-      </ToastProvider>
-    </AuthProvider>
+    <SupabaseAuthProvider>
+      <AuthProvider>
+        <ToastProvider>
+          <Router>
+          <Routes>
+          {/* Public routes */}
+          <Route path="/login" element={<SupabaseLogin />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
+          <Route path="/shared/:token" element={<SharedInspection />} />
+          <Route path="/accept-invitation/:token" element={<AcceptInvitation />} />
+          
+          {/* Protected routes */}
+          <Route path="/" element={<AuthGuard><HomePage /></AuthGuard>} />
+          <Route path="/inspections" element={<AuthGuard><Inspections /></AuthGuard>} />
+          <Route path="/inspections/new" element={<AuthGuard><NewInspection /></AuthGuard>} />
+          <Route path="/inspections/:id/edit" element={<AuthGuard><EditInspection /></AuthGuard>} />
+          <Route path="/inspections/:id" element={<AuthGuard><InspectionDetail /></AuthGuard>} />
+          <Route path="/reports" element={<AuthGuard><Reports /></AuthGuard>} />
+          <Route path="/settings" element={<AuthGuard><Settings /></AuthGuard>} />
+          <Route path="/settings/permissions" element={<AuthGuard requiredRole="system_admin"><RolePermissions /></AuthGuard>} />
+          <Route path="/checklists" element={<AuthGuard><ChecklistTemplates /></AuthGuard>} />
+          <Route path="/checklists/new" element={<AuthGuard><NewChecklistTemplate /></AuthGuard>} />
+          <Route path="/checklists/ai-generate" element={<AuthGuard><AIChecklistGenerator /></AuthGuard>} />
+          <Route path="/checklists/import" element={<AuthGuard><CSVImport /></AuthGuard>} />
+          <Route path="/checklists/:id" element={<AuthGuard><ChecklistDetail /></AuthGuard>} />
+          <Route path="/checklists/:id/edit" element={<AuthGuard><ChecklistTemplateEdit /></AuthGuard>} />
+          <Route path="/inspections/:id/action-plan" element={<AuthGuard><ActionPlan /></AuthGuard>} />
+          <Route path="/action-plans" element={<AuthGuard><ActionPlans /></AuthGuard>} />
+          
+          {/* Admin routes */}
+          <Route path="/users" element={<AuthGuard requiredRoles={["system_admin", "admin"]}><Users /></AuthGuard>} />
+          <Route path="/organizations" element={<AuthGuard requiredRoles={["system_admin", "admin", "org_admin", "manager"]}><Organizations /></AuthGuard>} />
+          <Route path="/organizations/:id" element={<AuthGuard requiredRoles={["system_admin", "admin", "org_admin", "manager"]}><OrganizationProfile /></AuthGuard>} />
+          <Route path="/profile" element={<AuthGuard><UserProfile /></AuthGuard>} />
+        </Routes>
+          </Router>
+        </ToastProvider>
+      </AuthProvider>
+    </SupabaseAuthProvider>
   );
 }

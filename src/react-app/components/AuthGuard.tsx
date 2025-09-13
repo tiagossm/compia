@@ -1,4 +1,5 @@
 import { useAuth } from '@getmocha/users-service/react';
+import { useSupabaseAuth } from '@/react-app/components/SupabaseAuthProvider';
 import { Navigate, useLocation } from 'react-router';
 import { Shield, Loader2 } from 'lucide-react';
 import { ExtendedMochaUser } from '@/shared/user-types';
@@ -10,11 +11,17 @@ interface AuthGuardProps {
 }
 
 export default function AuthGuard({ children, requiredRole, requiredRoles }: AuthGuardProps) {
-  const { user, isPending } = useAuth();
+  const { user: mochaUser, isPending } = useAuth();
+  const { user: supabaseUser, profile, loading: supabaseLoading } = useSupabaseAuth();
   const extendedUser = user as ExtendedMochaUser;
   const location = useLocation();
 
-  if (isPending) {
+  // Use Supabase auth as primary
+  const user = supabaseUser;
+  const userProfile = profile;
+  const loading = supabaseLoading || isPending;
+
+  if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
         <div className="bg-white rounded-xl shadow-lg p-8 text-center max-w-md">
@@ -39,10 +46,10 @@ export default function AuthGuard({ children, requiredRole, requiredRoles }: Aut
 
   // Check role-based access
   const hasRequiredRole = () => {
-    const userRole = extendedUser.profile?.role;
+    const userRole = userProfile?.role;
     
-    // Admin has access to everything
-    if (userRole === 'admin') {
+    // System admin has access to everything
+    if (userRole === 'system_admin') {
       return true;
     }
     

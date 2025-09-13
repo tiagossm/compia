@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '@getmocha/users-service/react';
+import { useSupabaseAuth } from '@/react-app/components/SupabaseAuthProvider';
+import { dashboardAPI } from '@/react-app/services/api';
 import Layout from '@/react-app/components/Layout';
 import OrganizationSelector from '@/react-app/components/OrganizationSelector';
 import DashboardCharts from '@/react-app/components/DashboardCharts';
@@ -42,13 +43,12 @@ interface ActionPlanSummary {
 }
 
 export default function Dashboard() {
-  const { user } = useAuth();
-  const extendedUser = user as ExtendedMochaUser;
+  const { user, profile } = useSupabaseAuth();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [actionSummary, setActionSummary] = useState<ActionPlanSummary | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedOrgId, setSelectedOrgId] = useState<number | null>(
-    extendedUser?.profile?.organization_id || null
+    profile?.organization_id ? parseInt(profile.organization_id) : null
   );
 
   useEffect(() => {
@@ -57,28 +57,13 @@ export default function Dashboard() {
 
   const fetchDashboardData = async () => {
     try {
-      let statsUrl = '/api/dashboard/stats';
-      let actionUrl = '/api/dashboard/action-plan-summary';
-      
-      if (selectedOrgId) {
-        statsUrl += `?organization_id=${selectedOrgId}`;
-        actionUrl += `?organization_id=${selectedOrgId}`;
-      }
-      
-      const [statsResponse, actionResponse] = await Promise.all([
-        fetch(statsUrl),
-        fetch(actionUrl)
+      const [statsData, actionData] = await Promise.all([
+        dashboardAPI.getStats(selectedOrgId?.toString()),
+        dashboardAPI.getActionPlanSummary(selectedOrgId?.toString())
       ]);
-
-      if (statsResponse.ok) {
-        const statsData = await statsResponse.json();
-        setStats(statsData);
-      }
-
-      if (actionResponse.ok) {
-        const actionData = await actionResponse.json();
-        setActionSummary(actionData);
-      }
+      
+      setStats(statsData);
+      setActionSummary(actionData);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
     } finally {
@@ -121,10 +106,10 @@ export default function Dashboard() {
     <Layout>
       <div className="space-y-6">
         {/* User Assignment Alert - for users without organization */}
-        {extendedUser?.profile && !extendedUser.profile.organization_id && (
+        {profile && !profile.organization_id && (
           <UnassignedUserBanner 
             userEmail={user?.email || ''}
-            userName={extendedUser.profile.name}
+            userName={profile.name}
           />
         )}
 
@@ -134,7 +119,7 @@ export default function Dashboard() {
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-2">
                 <h1 className="text-3xl font-bold">
-                  Olá, {extendedUser?.profile?.name || user?.email?.split('@')[0]}! 👋
+                  Olá, {profile?.name || user?.email?.split('@')[0]}! 👋
                 </h1>
                 <span className="text-sm bg-white/20 px-3 py-1 rounded-full">
                   {new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'short' })}
@@ -154,7 +139,7 @@ export default function Dashboard() {
               )}
             </div>
             
-            {(extendedUser?.profile?.role === 'system_admin' || extendedUser?.profile?.role === 'admin') && (
+            {(profile?.role === 'system_admin' || profile?.role === 'admin') && (
               <div className="w-full sm:w-64">
                 <OrganizationSelector
                   selectedOrgId={selectedOrgId}
@@ -382,7 +367,7 @@ export default function Dashboard() {
         )}
 
         {/* Admin Quick Actions */}
-        {(extendedUser?.profile?.role === 'system_admin' || extendedUser?.profile?.role === 'org_admin') && (
+        {(profile?.role === 'system_admin' || profile?.role === 'org_admin') && (
           <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
             <div className="flex items-center gap-3 mb-6">
               <div className="p-2 bg-red-100 rounded-lg">
@@ -419,7 +404,7 @@ export default function Dashboard() {
                 <div>
                   <h3 className="font-medium text-slate-900">Organizações</h3>
                   <p className="text-sm text-slate-600">
-                    {extendedUser?.profile?.role === 'system_admin' ? 'Empresas, consultorias e clientes' : 'Minha organização'}
+                    {profile?.role === 'system_admin' ? 'Empresas, consultorias e clientes' : 'Minha organização'}
                   </p>
                 </div>
               </a>
