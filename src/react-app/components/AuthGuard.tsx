@@ -1,8 +1,6 @@
-import { useAuth } from '@getmocha/users-service/react';
 import { useSupabaseAuth } from '@/react-app/components/SupabaseAuthProvider';
 import { Navigate, useLocation } from 'react-router';
 import { Shield, Loader2 } from 'lucide-react';
-import { ExtendedMochaUser } from '@/shared/user-types';
 
 interface AuthGuardProps {
   children: React.ReactNode;
@@ -11,15 +9,13 @@ interface AuthGuardProps {
 }
 
 export default function AuthGuard({ children, requiredRole, requiredRoles }: AuthGuardProps) {
-  const { user: mochaUser, isPending } = useAuth();
   const { user: supabaseUser, profile, loading: supabaseLoading } = useSupabaseAuth();
-  const extendedUser = user as ExtendedMochaUser;
   const location = useLocation();
 
   // Use Supabase auth as primary
   const user = supabaseUser;
   const userProfile = profile;
-  const loading = supabaseLoading || isPending;
+  const loading = supabaseLoading;
 
   if (loading) {
     return (
@@ -82,7 +78,7 @@ export default function AuthGuard({ children, requiredRole, requiredRoles }: Aut
           <p className="text-sm text-slate-500">
             Perfil necessário: <span className="font-medium">{requiredRoleText}</span>
             <br />
-            Seu perfil: <span className="font-medium">{extendedUser.profile?.role}</span>
+            Seu perfil: <span className="font-medium">{userProfile?.role}</span>
           </p>
         </div>
       </div>
