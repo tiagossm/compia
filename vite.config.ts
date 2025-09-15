@@ -8,6 +8,7 @@ export default defineConfig({
   },
   build: {
     chunkSizeWarningLimit: 5000,
+  }
   plugins: [react()],
   resolve: {
     alias: {
